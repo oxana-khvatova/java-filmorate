@@ -1,24 +1,23 @@
 package ru.yandex.practicum.filmorate.controllers;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.model.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
-import java.time.LocalDate;
 import java.util.*;
 
+@Slf4j
 @RestController
 public class UserController {
 
     private final Map<Integer, User> users = new HashMap<>();
     private static int idGenerator = 1;
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/users")
-    public Map<Integer, User> findAllUsers() {
-        return users;
+    public Collection<User> findAllUsers() {
+        return users.values();
     }
 
     @PutMapping("/users")
@@ -37,12 +36,15 @@ public class UserController {
 
     @PostMapping("/users")
     public void addUser(@Valid @RequestBody User user) {
-        if (user.getId() != 0 || !checkUser(user)) {
-            log.error("Can't add user: validation failed");
+        if (user.getId() != 0) {
+            log.error("Can't add user: validation failed id != 0");
             throw new ValidationException();
-        } else {
-            user.setId(idGenerator++);
         }
+        if (!checkUser(user)) {
+            log.error("Can't add user: validation failed: user login contains space");
+            throw new ValidationException();
+        }
+        user.setId(idGenerator++);
         if (!users.containsKey(user.getId())) {
             if (user.getName() == null || user.getName().isBlank()) {
                 user.setName(user.getLogin());
@@ -56,8 +58,6 @@ public class UserController {
     }
 
     public boolean checkUser(User user) {
-        return user.getEmail().contains("@") && !user.getLogin().contains(" ") &&
-                user.getLogin() != null &&
-                user.getBirthday().isBefore(LocalDate.now());
+        return !user.getLogin().contains(" ");
     }
 }
