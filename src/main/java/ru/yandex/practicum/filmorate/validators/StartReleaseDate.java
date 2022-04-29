@@ -23,7 +23,6 @@ public @interface StartReleaseDate {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }
 
 class StartReleaseDateValidator implements ConstraintValidator<StartReleaseDate, LocalDate> {

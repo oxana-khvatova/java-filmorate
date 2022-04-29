@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.validators.StartReleaseDate;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import javax.validation.constraints.NotNull;
 
 import java.time.Duration;
 import java.time.LocalDate;

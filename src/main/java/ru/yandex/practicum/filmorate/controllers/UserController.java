@@ -22,8 +22,12 @@ public class UserController {
 
     @PutMapping("/users")
     public void updateUser(@Valid @RequestBody User newUser) {
-        if (newUser.getId() == 0 || !checkUser(newUser)) {
-            log.error("Can't update user: validation failed" + newUser);
+        if (newUser.getId() == 0) {
+            log.error("Can't add user: validation failed id != 0");
+            throw new ValidationException();
+        }
+        if (!checkUser(newUser)) {
+            log.error("Can't add user: validation failed: user login contains space");
             throw new ValidationException();
         }
         if (users.containsKey(newUser.getId())) {

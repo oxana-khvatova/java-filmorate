@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.validators;
 
 
+import org.springframework.stereotype.Service;
+
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
