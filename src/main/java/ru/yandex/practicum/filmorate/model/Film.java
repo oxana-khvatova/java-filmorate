@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import lombok.Getter;
+import lombok.Setter;
 import ru.yandex.practicum.filmorate.validators.PositiveDuration;
 import ru.yandex.practicum.filmorate.validators.StartReleaseDate;
 
@@ -10,21 +12,36 @@ import javax.validation.constraints.Size;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
-@AllArgsConstructor
+@Getter
+@Setter
 public class Film {
-    int iD;
+
+    public Film(@NotBlank String name, @Size(max = 200) String description,
+                LocalDate releaseDate, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+    }
+
+    private int iD;
 
     @NotBlank
-    String name;
+    private String name;
 
+    @NotBlank
     @Size(max = 200)
-    String description;
+    private String description;
 
     @StartReleaseDate
-    LocalDate releaseDate;
+    private LocalDate releaseDate;
 
     @PositiveDuration
-    Duration duration;
+    private Duration duration;
+
+    private Set<Integer> likes = new HashSet<>();
 }

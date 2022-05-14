@@ -1,50 +1,69 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.yandex.practicum.filmorate.model.Film;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import javax.validation.*;
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
 @RestController
 public class FilmController {
 
-    private final Map<Integer, Film> films = new HashMap<>();
-    private static int idGenerator = 1;
+    FilmStorage filmStorage;
+    FilmService filmService;
+
+    @Autowired
+    public FilmController(FilmStorage filmStorage, FilmService filmService) {
+        this.filmStorage = filmStorage;
+        this.filmService = filmService;
+    }
 
     @GetMapping("/films")
     public Collection<Film> findAll() {
-        return films.values();
+        return filmStorage.findAll();
+    }
+
+    @GetMapping("/films/{id}")
+    public Film findFilmById(@PathVariable("id") Integer id) {
+
+        return filmStorage.findFilmById(id);
     }
 
     @PutMapping("/films")
-    public void updateFilm(@Valid @RequestBody Film film) {
-        if (film.getID() == 0) {
-            log.error("Can't add film: validation failed");
-            throw new ValidationException();
-        }
-        if (films.containsKey(film.getID())) {
-            films.replace(film.getID(), film);
-            log.info("Update film" + film);
-        } else {
-            throw new RuntimeException();
-        }
+    public Film updateFilm(@Valid @RequestBody Film film) {
+        return filmStorage.updateFilm(film);
     }
 
     @PostMapping("/films")
-    public void addFilm(@Valid @RequestBody Film film) {
-        if (film.getID() != 0) {
-            log.error("Can't add film: validation failed");
-            throw new ValidationException();
-        } else {
-            film.setID(idGenerator++);
-        }
-        films.put(film.getID(), film);
-        log.info("Add film: " + film);
+    public Film addFilm(@Valid @RequestBody Film film) {
+        return filmStorage.addFilm(film);
+    }
+
+    @DeleteMapping("/films")
+    public void deleteFilm(@Valid @RequestBody Film film) {
+        filmStorage.deleteFilm(film);
+    }
+
+    @PutMapping("/films/{id}/like/{userId}")
+    public void addLike(@PathVariable("id") Integer id,
+                        @PathVariable("userId") Integer friendId) {
+        filmService.addLike(id, friendId);
+    }
+
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public void deleteLike(@PathVariable("id") Integer id,
+                           @PathVariable("userId") Integer friendId) {
+        filmService.deleteLike(id, friendId);
+    }
+
+    @GetMapping("/films/popular")
+    public List<Film> topFilms(@RequestParam(defaultValue = "10") Integer count) {
+        return filmService.topFilms(count);
     }
 }

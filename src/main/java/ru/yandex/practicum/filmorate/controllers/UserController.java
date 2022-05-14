@@ -1,67 +1,74 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.yandex.practicum.filmorate.model.User;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import java.util.*;
 
 @Slf4j
 @RestController
 public class UserController {
 
-    private final Map<Integer, User> users = new HashMap<>();
-    private static int idGenerator = 1;
+    UserStorage userStorage;
+    UserService userService;
+
+    @Autowired
+    public UserController(UserStorage userStorage, UserService userService) {
+        this.userStorage = userStorage;
+        this.userService = userService;
+    }
 
     @GetMapping("/users")
     public Collection<User> findAllUsers() {
-        return users.values();
+        return userStorage.findAllUsers();
+    }
+
+    @GetMapping("/users/{id}")
+    public User findUserById(@PathVariable("id") Integer id) {
+        return userStorage.findUserById(id);
     }
 
     @PutMapping("/users")
-    public void updateUser(@Valid @RequestBody User newUser) {
-        if (newUser.getId() == 0) {
-            log.error("Can't add user: validation failed id != 0");
-            throw new ValidationException();
-        }
-        if (!checkUser(newUser)) {
-            log.error("Can't add user: validation failed: user login contains space");
-            throw new ValidationException();
-        }
-        if (users.containsKey(newUser.getId())) {
-            users.replace(newUser.getId(), newUser);
-            log.info("Updated user " + newUser);
-        } else {
-            throw new RuntimeException();
-        }
+    public User updateUser(@Valid @RequestBody User newUser) {
+        return userStorage.updateUser(newUser);
     }
 
     @PostMapping("/users")
-    public void addUser(@Valid @RequestBody User user) {
-        if (user.getId() != 0) {
-            log.error("Can't add user: validation failed id != 0");
-            throw new ValidationException();
-        }
-        if (!checkUser(user)) {
-            log.error("Can't add user: validation failed: user login contains space");
-            throw new ValidationException();
-        }
-        user.setId(idGenerator++);
-        if (!users.containsKey(user.getId())) {
-            if (user.getName() == null || user.getName().isBlank()) {
-                user.setName(user.getLogin());
-            }
-            users.put(user.getId(), user);
-            log.info("Add user" + user);
-        } else {
-            log.error("User already exist");
-            throw new RuntimeException();
-        }
+    public User addUser(@Valid @RequestBody User user) {
+        return userStorage.addUser(user);
     }
 
-    public boolean checkUser(User user) {
-        return !user.getLogin().contains(" ");
+    @DeleteMapping("/users")
+    public void deleteUser(@Valid @RequestBody User user) {
+        userStorage.deleteUser(user);
     }
+
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public void addFriends(@PathVariable("id") Integer id,
+                           @PathVariable("friendId") Integer friendId) {
+        userService.addFriends(id, friendId);
+    }
+
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public void deleteFriends(@PathVariable("id") Integer id,
+                              @PathVariable("friendId") Integer friendId) {
+        userService.deleteFriends(id, friendId);
+    }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public Set<Integer> showCommonFriends(@PathVariable("id") Integer id,
+                                          @PathVariable("friendId") Integer friendId) {
+        return userService.showCommonFriends(id, friendId);
+    }
+
+    @GetMapping("/users/{id}/friends")
+    public Set<User> getFriends(@PathVariable("id") Integer id) {
+        return userService.getFriends(id);
+    }
+
 }
