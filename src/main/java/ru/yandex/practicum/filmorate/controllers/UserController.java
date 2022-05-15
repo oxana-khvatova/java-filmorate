@@ -25,27 +25,27 @@ public class UserController {
 
     @GetMapping("/users")
     public Collection<User> findAllUsers() {
-        return userStorage.findAllUsers();
+        return userStorage.findAll();
     }
 
     @GetMapping("/users/{id}")
     public User findUserById(@PathVariable("id") Integer id) {
-        return userStorage.findUserById(id);
+        return userStorage.findById(id);
     }
 
     @PutMapping("/users")
     public User updateUser(@Valid @RequestBody User newUser) {
-        return userStorage.updateUser(newUser);
+        return userStorage.update(newUser);
     }
 
     @PostMapping("/users")
     public User addUser(@Valid @RequestBody User user) {
-        return userStorage.addUser(user);
+        return userStorage.add(user);
     }
 
     @DeleteMapping("/users")
     public void deleteUser(@Valid @RequestBody User user) {
-        userStorage.deleteUser(user);
+        userStorage.delete(user);
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")

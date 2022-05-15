@@ -18,13 +18,9 @@ public class InMemoryUserStorage implements UserStorage {
     private static int idGenerator = 1;
 
     @Override
-    public User addUser(User user) {
+    public User add(User user) {
         if (user.getId() != 0) {
             log.error("Can't add user: validation failed id != 0");
-            throw new ValidationException();
-        }
-        if (!checkUser(user)) {
-            log.error("Can't add user: validation failed: user login contains space");
             throw new ValidationException();
         }
         if (!users.containsKey(user.getId())) {
@@ -41,18 +37,10 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
-    public boolean checkUser(User user) {
-        return !user.getLogin().contains(" ");
-    }
-
     @Override
-    public User updateUser(User newUser) {
+    public User update(User newUser) {
         if (newUser.getId() == 0) {
             log.error("Can't add user: validation failed id != 0");
-            throw new ValidationException();
-        }
-        if (!checkUser(newUser)) {
-            log.error("Can't add user: validation failed: user login contains space");
             throw new ValidationException();
         }
         if (users.containsKey(newUser.getId())) {
@@ -65,12 +53,12 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Collection<User> findAllUsers() {
+    public Collection<User> findAll() {
         return users.values();
     }
 
     @Override
-    public void deleteUser(User user) {
+    public void delete(User user) {
         if (user.getId() == 0) {
             log.error("Can't add user: validation failed id != 0");
             throw new ValidationException();
@@ -83,7 +71,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User findUserById(Integer id) {
+    public User findById(Integer id) {
         if (!users.containsKey(id)) {
             throw new UserNotFoundException("Пользователь с " + id + "не найден");
         }

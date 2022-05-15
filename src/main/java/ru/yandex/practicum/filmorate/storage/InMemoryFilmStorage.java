@@ -18,7 +18,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     private static int idGenerator = 1;
 
     @Override
-    public Film addFilm(Film film) {
+    public Film add(Film film) {
         if (film.getID() != 0) {
             log.error("Can't add film: validation failed");
             throw new ValidationException();
@@ -31,7 +31,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film updateFilm(Film film) {
+    public Film update(Film film) {
         if (film.getID() == 0) {
             log.error("Can't update film: validation failed");
             throw new ValidationException();
@@ -46,7 +46,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void deleteFilm(Film film) {
+    public void delete(Film film) {
         if (film.getID() == 0) {
             log.error("Can't delete film: validation failed");
             throw new ValidationException();
@@ -65,7 +65,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film findFilmById(Integer id) {
+    public Film findById(Integer id) {
         if (!films.containsKey(id)) {
             throw new FilmNotFoundException("Film id " + id + "not found");
         }

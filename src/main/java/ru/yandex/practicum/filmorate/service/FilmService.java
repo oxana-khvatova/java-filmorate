@@ -26,14 +26,14 @@ public class FilmService {
     }
 
     public void addLike(Integer id, Integer userId) {
-        Film film = filmStorage.findFilmById(id);
-        User user = userStorage.findUserById(userId);
+        Film film = filmStorage.findById(id);
+        User user = userStorage.findById(userId);
         film.getLikes().add(user.getId());
     }
 
     public void deleteLike(Integer id, Integer userId) {
-        Film film = filmStorage.findFilmById(id);
-        User user = userStorage.findUserById(userId);
+        Film film = filmStorage.findById(id);
+        User user = userStorage.findById(userId);
         film.getLikes().remove(user.getId());
     }
 

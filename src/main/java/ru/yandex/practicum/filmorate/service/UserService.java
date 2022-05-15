@@ -22,16 +22,16 @@ public class UserService {
     }
 
     public void addFriends(Integer id, Integer friendId) {
-        User user = userStorage.findUserById(id);
-        User friendsUser = userStorage.findUserById(friendId);
+        User user = userStorage.findById(id);
+        User friendsUser = userStorage.findById(friendId);
         user.getFriends().add(friendId);
         log.info("Add friend");
         friendsUser.getFriends().add(id);
     }
 
     public void deleteFriends(Integer id, Integer friendId) {
-        User user = userStorage.findUserById(id);
-        User friendsUser = userStorage.findUserById(friendId);
+        User user = userStorage.findById(id);
+        User friendsUser = userStorage.findById(friendId);
         if (user.getFriends().contains(friendsUser.getId())) {
             user.getFriends().remove(friendsUser.getId());
             friendsUser.getFriends().remove(user.getId());
@@ -41,8 +41,8 @@ public class UserService {
     }
 
     public Set<Integer> showCommonFriends(Integer id, Integer friendId) {
-        User user = userStorage.findUserById(id);
-        User friendsUser = userStorage.findUserById(friendId);
+        User user = userStorage.findById(id);
+        User friendsUser = userStorage.findById(friendId);
         Set<Integer> commonFriends = new HashSet<Integer>();
         for (Integer idUser : user.getFriends()) {
             if (friendsUser.getFriends().contains(idUser)) {
@@ -53,10 +53,10 @@ public class UserService {
     }
 
     public Set<User> getFriends(Integer id) {
-        User user = userStorage.findUserById(id);
+        User user = userStorage.findById(id);
         Set<User> friendsUser = new HashSet<>();
         for (Integer friendId : user.getFriends()) {
-            friendsUser.add(userStorage.findUserById(friendId));
+            friendsUser.add(userStorage.findById(friendId));
         }
         return friendsUser;
     }

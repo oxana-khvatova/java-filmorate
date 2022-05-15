@@ -30,24 +30,24 @@ public class FilmController {
     }
 
     @GetMapping("/films/{id}")
-    public Film findFilmById(@PathVariable("id") Integer id) {
+    public Film findById(@PathVariable("id") Integer id) {
 
-        return filmStorage.findFilmById(id);
+        return filmStorage.findById(id);
     }
 
     @PutMapping("/films")
     public Film updateFilm(@Valid @RequestBody Film film) {
-        return filmStorage.updateFilm(film);
+        return filmStorage.update(film);
     }
 
     @PostMapping("/films")
     public Film addFilm(@Valid @RequestBody Film film) {
-        return filmStorage.addFilm(film);
+        return filmStorage.add(film);
     }
 
     @DeleteMapping("/films")
     public void deleteFilm(@Valid @RequestBody Film film) {
-        filmStorage.deleteFilm(film);
+        filmStorage.delete(film);
     }
 
     @PutMapping("/films/{id}/like/{userId}")
