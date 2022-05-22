@@ -20,13 +20,20 @@ import java.util.Set;
 @Setter
 public class Film {
 
-    public Film(@NotBlank String name, @Size(max = 200) String description,
-                LocalDate releaseDate, Duration duration) {
+    public Film(@NotBlank String name, @Size
+            (max = 200) String description,
+                LocalDate releaseDate, Duration duration, Genre genre, Mpa mpa) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+        this.genre = genre;
+        this.mpa = mpa;
     }
+
+    private Genre genre;
+
+    private Mpa mpa;
 
     private int iD;
 

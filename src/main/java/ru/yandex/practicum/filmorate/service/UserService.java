@@ -40,13 +40,13 @@ public class UserService {
         }
     }
 
-    public Set<Integer> showCommonFriends(Integer id, Integer friendId) {
+    public Set<User> showCommonFriends(Integer id, Integer friendId) {
         User user = userStorage.findById(id);
         User friendsUser = userStorage.findById(friendId);
-        Set<Integer> commonFriends = new HashSet<Integer>();
+        Set<User> commonFriends = new HashSet<>();
         for (Integer idUser : user.getFriends()) {
             if (friendsUser.getFriends().contains(idUser)) {
-                commonFriends.add(idUser);
+                commonFriends.add(userStorage.findById(idUser));
             }
         }
         return commonFriends;
