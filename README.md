@@ -2,7 +2,7 @@
 Template repository for Filmorate project.
 
 ## Database scheme
-![Schema](./database.jpg)
+![Schema](./database2.jpg)
 
 Запрос на вывод всех фильмов
 ```
@@ -10,9 +10,7 @@ SELECT f.name,
 f.id,
 f.description,
 f.releaseDate,
-f.duration,
-g.genre,
-f.mpa
+f.duration
 FROM Film as f
 JOIN Genre as g ON g.genre_id = f.genre_id;
 ```
