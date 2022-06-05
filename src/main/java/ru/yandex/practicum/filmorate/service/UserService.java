@@ -21,23 +21,25 @@ public class UserService {
         this.userStorage = userStorage;
     }
 
+    public User addUser(User user) {
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
+        return userStorage.add(user);
+    }
+
     public void addFriends(Integer id, Integer friendId) {
         User user = userStorage.findById(id);
         User friendsUser = userStorage.findById(friendId);
-        user.getFriends().add(friendId);
+        userStorage.addFriend(user, friendsUser);
         log.info("Add friend");
-        friendsUser.getFriends().add(id);
     }
 
     public void deleteFriends(Integer id, Integer friendId) {
         User user = userStorage.findById(id);
         User friendsUser = userStorage.findById(friendId);
-        if (user.getFriends().contains(friendsUser.getId())) {
-            user.getFriends().remove(friendsUser.getId());
-            friendsUser.getFriends().remove(user.getId());
-        } else {
-            throw new UserNotFoundException("В списке друзей нет друга с id " + friendId);
-        }
+        userStorage.deleteFriends(user, friendsUser);
+        log.info("Delete friend");
     }
 
     public Set<User> showCommonFriends(Integer id, Integer friendId) {

@@ -28,13 +28,13 @@ public class FilmService {
     public void addLike(Integer id, Integer userId) {
         Film film = filmStorage.findById(id);
         User user = userStorage.findById(userId);
-        film.getLikes().add(user.getId());
+        filmStorage.addLike(film, user);
     }
 
     public void deleteLike(Integer id, Integer userId) {
         Film film = filmStorage.findById(id);
         User user = userStorage.findById(userId);
-        film.getLikes().remove(user.getId());
+        filmStorage.deleteLike(film, user);
     }
 
     public List<Film> topFilms(Integer count) {
