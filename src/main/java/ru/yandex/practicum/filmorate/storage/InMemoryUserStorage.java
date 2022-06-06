@@ -24,9 +24,6 @@ public class InMemoryUserStorage implements UserStorage {
             throw new ValidationException();
         }
         if (!users.containsKey(user.getId())) {
-            if (user.getName() == null || user.getName().isBlank()) {
-                user.setName(user.getLogin());
-            }
             user.setId(idGenerator++);
             users.put(user.getId(), user);
             log.info("Add user" + user);
@@ -50,6 +47,22 @@ public class InMemoryUserStorage implements UserStorage {
             throw new UserNotFoundException("User " + newUser + " not found ");
         }
         return newUser;
+    }
+
+    @Override
+    public void addFriend(User user, User friend) {
+        user.getFriends().add(friend.getId());
+        friend.getFriends().add(user.getId());
+    }
+
+    @Override
+    public void deleteFriends(User user, User friend) {
+        if (user.getFriends().contains(friend.getId())) {
+            user.getFriends().remove(friend.getId());
+            friend.getFriends().remove(user.getId());
+        } else {
+            throw new UserNotFoundException("В списке друзей нет друга с id " + friend.getId());
+        }
     }
 
     @Override

@@ -40,7 +40,7 @@ public class UserController {
 
     @PostMapping("/users")
     public User addUser(@Valid @RequestBody User user) {
-        return userStorage.add(user);
+        return userService.addUser(user);
     }
 
     @DeleteMapping("/users")
